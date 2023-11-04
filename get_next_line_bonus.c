@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 10:04:49 by mbartos           #+#    #+#             */
-/*   Updated: 2023/11/04 20:00:22 by mbartos          ###   ########.fr       */
+/*   Updated: 2023/11/04 22:29:27 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,19 +85,19 @@ char	*remove_line(char	*buffer)
 
 char	*get_next_line(int fd)
 {
-	static char	*buffer;
+	static char	*buffer[1024];
 	char		*line;
 	int			size;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) == -1)
 		return (NULL);
 	size = BUFFER_SIZE;
-	if (buffer == 0)
-		buffer = (char *) ft_calloc(1, sizeof(char));
-	while ((!ft_strchr(buffer, '\n')) && size == BUFFER_SIZE)
-		buffer = file_read(buffer, fd, &size);
-	line = read_line(buffer);
-	buffer = remove_line(buffer);
+	if (buffer[fd] == 0)
+		buffer[fd] = (char *) ft_calloc(1, sizeof(char));
+	while ((!ft_strchr(buffer[fd], '\n')) && size == BUFFER_SIZE)
+		buffer[fd] = file_read(buffer[fd], fd, &size);
+	line = read_line(buffer[fd]);
+	buffer[fd] = remove_line(buffer[fd]);
 	if (*line == '\0')
 	{
 		free (line);
