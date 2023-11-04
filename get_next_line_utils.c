@@ -6,8 +6,60 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 10:07:31 by mbartos           #+#    #+#             */
-/*   Updated: 2023/11/02 14:57:26 by mbartos          ###   ########.fr       */
+/*   Updated: 2023/11/04 19:52:43 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+size_t	ft_strlen(const char *s)
+{
+	int	i;
+
+	i = 0;
+	while (s[i] != 0)
+		i++;
+	return (i);
+}
+
+void	*ft_calloc(size_t count, size_t size)
+{
+	unsigned char	*memory;
+	unsigned char	*memory_first;
+	unsigned int	max_int;
+	unsigned int	i;
+
+	max_int = 2147483647;
+	if (count > max_int && size > max_int)
+		return (NULL);
+	memory = (unsigned char *) malloc(count * size);
+	if (memory == NULL)
+		return (NULL);
+	memory_first = memory;
+	i = 0;
+	while (i < (count * size))
+	{
+		*memory++ = 0;
+		i++;
+	}
+	return ((void *) memory_first);
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	char	*str;
+	char	*str_first;
+	int		str_len;
+
+	str_len = ft_strlen(s1) + ft_strlen(s2);
+	str = (char *) malloc((str_len + 1) * sizeof(char));
+	if (str == NULL)
+		return (NULL);
+	str_first = str;
+	while (*s1)
+		*str++ = *s1++;
+	while (*s2)
+		*str++ = *s2++;
+	*str = '\0';
+	return (str_first);
+}
