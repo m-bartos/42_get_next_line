@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/02 10:07:31 by mbartos           #+#    #+#             */
-/*   Updated: 2023/11/04 20:00:20 by mbartos          ###   ########.fr       */
+/*   Created: 2023/11/02 10:04:49 by mbartos           #+#    #+#             */
+/*   Updated: 2023/11/14 11:41:39 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,22 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		*str++ = *s2++;
 	*str = '\0';
 	return (str_first);
+}
+
+char	*ft_strchr(const char *s, int c)
+{
+	int		i;
+
+	if (!s)
+		return (NULL);
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == (unsigned char) c)
+			return ((char *) &s[i]);
+		i++;
+	}
+	if ((unsigned char) c == '\0')
+		return ((char *) &s[i]);
+	return (NULL);
 }
