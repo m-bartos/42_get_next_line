@@ -6,56 +6,57 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 10:04:49 by mbartos           #+#    #+#             */
-/*   Updated: 2023/11/04 20:58:14 by mbartos          ###   ########.fr       */
+/*   Updated: 2023/11/14 11:38:28 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_strchr(const char *s, int c)
-{
-	int		i;
-	char	*str;
-
-	str = (char *) s;
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == (unsigned char) c)
-			return (&str[i]);
-		i++;
-	}
-	if ((unsigned char) c == '\0')
-		return (&str[i]);
-	return (NULL);
-}
-
-char	*file_read(char	*buffer, int fd, int *size)
+char	*file_read(char *buffer, int fd)
 {
 	char	*buffer_add;
 	char	*old_buffer;
+	int		size;
 
 	buffer_add = (char *) ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	*size = read(fd, buffer_add, BUFFER_SIZE);
-	old_buffer = buffer;
-	buffer = ft_strjoin(old_buffer, buffer_add);
+	if (!buffer_add)
+		return (NULL);
+	size = 1;
+	while (ft_strchr(buffer, '\n') == NULL && size != 0)
+	{
+		size = read(fd, buffer_add, BUFFER_SIZE);
+		if (size == -1)
+		{
+			free(buffer_add);
+			return (NULL);
+		}
+		buffer_add[size] = '\0';
+		old_buffer = buffer;
+		if (old_buffer == NULL)
+			old_buffer = (char *) ft_calloc(1, sizeof(char));
+		buffer = ft_strjoin(old_buffer, buffer_add);
+		free(old_buffer);
+	}
 	free(buffer_add);
-	free(old_buffer);
 	return (buffer);
 }
 
-char	*read_line(char	*buffer)
+char	*read_line(char *buffer)
 {
 	int		i;
 	int		len;
 	char	*line;
 
+	if (!*buffer)
+		return (NULL);
 	len = 0;
 	while (buffer[len] != '\n' && buffer[len] != '\0' )
 		len++;
 	if (buffer[len] == '\n')
 		len++;
 	line = (char *) ft_calloc(len + 1, sizeof(char));
+	if (!line)
+		return (NULL);
 	i = 0;
 	while (i < len)
 	{
@@ -65,7 +66,7 @@ char	*read_line(char	*buffer)
 	return (line);
 }
 
-char	*remove_line(char	*buffer)
+char	*remove_line(char *buffer)
 {
 	char	*temp;
 
@@ -87,21 +88,13 @@ char	*get_next_line(int fd)
 {
 	static char	*buffer;
 	char		*line;
-	int			size;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) == -1)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	size = BUFFER_SIZE;
-	if (buffer == 0)
-		buffer = (char *) ft_calloc(1, sizeof(char));
-	while ((!ft_strchr(buffer, '\n')) && size == BUFFER_SIZE)
-		buffer = file_read(buffer, fd, &size);
+	buffer = file_read(buffer, fd);
+	if (!buffer)
+		return (NULL);
 	line = read_line(buffer);
 	buffer = remove_line(buffer);
-	if (*line == '\0')
-	{
-		free (line);
-		return (NULL);
-	}
 	return (line);
 }
