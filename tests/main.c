@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 10:08:56 by mbartos           #+#    #+#             */
-/*   Updated: 2023/11/04 19:56:32 by mbartos          ###   ########.fr       */
+/*   Updated: 2023/11/14 11:14:32 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,14 @@ int	main(void)
 	char	*line;
 
 	line = NULL;
-	fd = open("test.txt", O_RDONLY);
+	fd = open("read_error.txt", O_RDONLY);
 	if (fd == -1)
 		write(2, "Problem opening file.", 21);
 	print_string_fd(fd, line);
 	print_string_fd(fd, line);
+	print_string_fd(fd, line);
 	close(fd);
-	fd = open("test.txt", O_RDONLY);
+	fd = open("read_error.txt", O_RDONLY);
 	if (fd == -1)
 		write(2, "Problem opening file.", 21);
 	print_string_fd(fd, line);
